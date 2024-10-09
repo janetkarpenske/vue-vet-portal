@@ -1,4 +1,4 @@
-# vue-pictaverse
+# vue-vet-portal
 
 Demo veterinary hospital site created using Vue 3. Utilizes Pinia for state-management, Vue-Router, Vuetifyjs for stylization, Vee-Validate for form validations, and Firebase.
 
