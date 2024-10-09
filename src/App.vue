@@ -5,7 +5,7 @@
       <nav-bar />
       <br/>
       <div class="form">
-        <register-form />
+        <router-view></router-view>
       </div>
     </div>
   </header>
@@ -13,7 +13,8 @@
 
 <script setup>
 import NavBar from './components/NavBar.vue'
-import RegisterForm from '@/components/forms/RegisterForm.vue'
+//import RegisterForm from '@/components/forms/RegisterForm.vue'
+//import Home from '@/components/Home.vue'
 </script>
 
 <style scoped>

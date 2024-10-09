@@ -13,9 +13,21 @@
         </template>
         <v-app-bar-title>PawPal</v-app-bar-title>
         <template v-slot:append>
-          <v-btn>About</v-btn>
-          <v-btn>Sign In</v-btn>
-          <v-btn>Register</v-btn>
+          <router-link to="/about">
+            <v-btn>
+              About
+            </v-btn>
+          </router-link>
+          <router-link to="/users/signin">
+            <v-btn>
+              Sign In
+            </v-btn>
+          </router-link>
+          <router-link to="/users/register">
+            <v-btn>
+              Register
+            </v-btn>
+          </router-link>
         </template>
       </v-app-bar>
     </v-layout>

@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 
+//process.env.FIREBASE_API_KEY
 const firebaseConfig = {
   apiKey: "AIzaSyBg9fOzVwqhJmTtkNq4ptxEyYML04ZyUp8",
   authDomain: "vue-vet-portal.firebaseapp.com",

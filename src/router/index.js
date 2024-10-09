@@ -1,14 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RegisterForm from '../components/forms/RegisterForm.vue'
-//import Register from '../components/users/register.vue'
-//import AddArticle from '../components/admin/add_article.vue'
+import SigninForm from '../components/forms/SigninForm.vue'
+import Home from '../components/Home.vue'
+import About from '../components/About.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', component: RegisterForm }//,
-    //{ path: '/users/register', component: Register },
-    //{ path: '/admin/add_article', component: AddArticle }
+    { path: '/', component: Home },
+    { path: '/users/register', component: RegisterForm },
+    { path: '/users/signin', component: SigninForm },
+    { path: '/about', component: About }
   ]
 })
 
