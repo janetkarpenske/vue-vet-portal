@@ -11,8 +11,15 @@ Demo veterinary hospital site created using Vue 3. Utilizes Pinia for state-mana
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
 ## Project Setup
+Navigate to project's root directory and create a .env file with the following contents:
+```sh
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+```
+Reach out to repo owner for access to required keys.
 
-Navigate to project's root directory and run npm install.
+From project root directory run npm install.
 ```sh
 npm install
 ```
