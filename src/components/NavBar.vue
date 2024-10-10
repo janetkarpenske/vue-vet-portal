@@ -18,7 +18,7 @@
               About
             </v-btn>
           </router-link>
-          <router-link to="/users/signin">
+          <router-link v-if="!isAuth" to="/users/signin">
             <v-btn>
               Sign In
             </v-btn>
@@ -29,7 +29,7 @@
             </v-btn>
           </router-link>
 
-            <v-btn @click="handleSignOut">
+            <v-btn v-if="isAuth" @click="handleSignOut">
               Logout
             </v-btn>
 
@@ -46,14 +46,14 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const isAuth= ref(auth.currentUser);
+
 const router = useRouter();
 const handleSignOut = () => {
   signOut(auth);
 };
 
 onAuthStateChanged(auth,(user) => {
-  //if user is logged in, return user, if not returns null
-  console.log(user);
+  //returns null if a user is authenticated, returns null if no user authenticated
   isAuth.value = user;
   if(!isAuth.value){
     router.push('/');
