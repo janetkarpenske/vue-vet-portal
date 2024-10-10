@@ -1,18 +1,16 @@
 <template>
   <h1 class="header">Sign In</h1>
-    <v-form v-model="valid">
+    <v-form @submit.prevent="submitForm">
       <v-container width="500">
         <v-text-field
-          v-model="email"
-          :rules="emailRules"
+          v-model="formData.userEmail"
           label="E-mail"
           hide-details
           required
         ></v-text-field>
         <br>
         <v-text-field
-          v-model="password"
-          :rules="passwordRules"
+          v-model="formData.userPassword"
           label="Password"
           hide-details
           required
@@ -23,7 +21,41 @@
 </template>
 
 <script setup>
+  import { reactive, ref } from 'vue';
+  import { auth } from '@/firebase/config';
+  import { signInWithEmailAndPassword } from 'firebase/auth';
+  import { useRouter } from 'vue-router';
 
+  const router = useRouter();
+  const formData = reactive({
+    userEmail:'',
+    userPassword:''
+  });
+
+  const submitForm = () => {
+    console.log(formData);
+    if(true) {
+      signInUser();
+    }
+  }
+
+  const signInUser = async() => {
+    try{
+      const response = await signInWithEmailAndPassword(
+        auth, formData.userEmail, formData.userPassword
+      )
+      if(!response) {
+        throw newError('Sorry, something went wrong');
+      }
+      else {
+        formData.userEmail = '';
+        formData.userPassword = '';
+        router.push('/');
+      }
+    }
+    catch(error) {
+    }
+  }
 </script>
 
 <style scoped>

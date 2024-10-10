@@ -28,11 +28,38 @@
               Register
             </v-btn>
           </router-link>
+
+            <v-btn @click="handleSignOut">
+              Logout
+            </v-btn>
+
         </template>
       </v-app-bar>
     </v-layout>
   </v-card>
 </template>
+
+<script setup>
+import { auth } from '@/firebase/config';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const isAuth= ref(auth.currentUser);
+const router = useRouter();
+const handleSignOut = () => {
+  signOut(auth);
+};
+
+onAuthStateChanged(auth,(user) => {
+  //if user is logged in, return user, if not returns null
+  console.log(user);
+  isAuth.value = user;
+  if(!isAuth.value){
+    router.push('/');
+  }
+})
+</script> 
 
 <style scoped>
 </style>
