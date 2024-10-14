@@ -23,7 +23,7 @@
               Sign In
             </v-btn>
           </router-link>
-          <router-link to="/users/register">
+          <router-link v-if="!isAuth" to="/users/register">
             <v-btn>
               Register
             </v-btn>
@@ -44,7 +44,9 @@ import { auth } from '@/firebase/config';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { userStore } from '@/store/userStore';
 
+const userStoreRef = userStore();
 const isAuth= ref(auth.currentUser);
 
 const router = useRouter();
@@ -55,9 +57,8 @@ const handleSignOut = () => {
 onAuthStateChanged(auth,(user) => {
   //returns null if a user is authenticated, returns null if no user authenticated
   isAuth.value = user;
-  if(!isAuth.value){
-    router.push('/');
-  }
+  console.log("Auth state from navbar: ", isAuth);
+  userStoreRef.setUser(user);
 })
 </script> 
 

@@ -33,7 +33,6 @@
   });
 
   const submitForm = () => {
-    console.log(formData);
     if(true) {
       signInUser();
     }
@@ -50,7 +49,7 @@
       else {
         formData.userEmail = '';
         formData.userPassword = '';
-        router.push('/');
+        router.push('/dashboard');
       }
     }
     catch(error) {
