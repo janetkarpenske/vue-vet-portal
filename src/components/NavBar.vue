@@ -66,14 +66,16 @@
 </template>
 
 <script setup>
-import { auth } from '@/firebase/config';
+import { auth, DB } from '@/firebase/config';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { collection, query, where, getDocs } from 'firebase/firestore'
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { userStore } from '@/store/userStore';
 
 const userStoreRef = userStore();
 const isAuth= ref(auth.currentUser);
+const userPets = ref([]);
 
 const router = useRouter();
 const handleSignOut = () => {
@@ -81,12 +83,28 @@ const handleSignOut = () => {
   router.push("/");
 };
 
-onAuthStateChanged(auth,(user) => {
-  //returns null if a user is authenticated, returns null if no user authenticated
+onAuthStateChanged (auth, (user) => {
   isAuth.value = user;
-  console.log("Auth state from navbar: ", isAuth);
   userStoreRef.setUser(user);
+  if(user != null) {
+    getUserPets(user.uid);
+    getUserProfile(user.uid);
+  };
 })
+
+async function getUserPets(userID) {
+  const q = query(collection(DB, "userPets"), where("upUserID", "==", userID));
+
+  const querySnapshot = await getDocs(q);
+  querySnapshot?.forEach((doc) => {
+  //console.log(doc.id, " => ", doc.data().upName);
+  //Set pets in store here in future
+  });
+}
+
+async function getUserProfile(userID) {
+  //in future, retrive full user data and set in store
+}
 </script> 
 
 <style scoped>
