@@ -19,6 +19,6 @@ import NavBar from './components/NavBar.vue'
 
 <style scoped>
   .form {
-    padding-top: 20vh;
+    padding-top: 4vh;
   }
 </style>
