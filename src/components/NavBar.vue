@@ -89,6 +89,9 @@ onAuthStateChanged (auth, (user) => {
   if(user != null) {
     getUserPets(user.uid);
     getUserProfile(user.uid);
+  }
+  else {
+    //need to clear user data and pet data from stores
   };
 })
 
