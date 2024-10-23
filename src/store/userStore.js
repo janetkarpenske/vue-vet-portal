@@ -3,12 +3,15 @@ import { defineStore } from "pinia";
 export const userStore = defineStore('userStore',{
     state:()=>({
         user: null,
-        isAdmin: false
+        isAdmin: true
     }),
     persist: true,
     getters:{
         getUser(state){
             return state.user
+        },
+        getUserIsAdmin(state){
+            return state.isAdmin
         }
     },
     actions:{

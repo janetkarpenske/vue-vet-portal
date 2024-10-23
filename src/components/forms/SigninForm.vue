@@ -11,6 +11,7 @@
         <br>
         <v-text-field
           v-model="formData.userPassword"
+          type="password"
           label="Password"
           hide-details
           required

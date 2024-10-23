@@ -1,16 +1,26 @@
 <template>
     <div>
-        Name: {{ petDetails.upName }}
+        <b>Name</b> {{ petDetails.upName }}
         <br>
-        Species: {{ petDetails.upSpecies }}
+        <b>Species</b> {{ petDetails.upSpecies }}
         <br>
-        Sex: {{ petDetails.upSex }}
+        <b>Sex</b> {{ petDetails.upSex }}
         <br>
-        Owner Email/Username: {{ petDetails.upOwner }}
+        <b>Owner Email/Username</b> {{ petDetails.upOwner }}
 
+        <div v-if="count">
+            <p>Only show data here if user is an employee</p>
+        </div>
     </div>
 </template>
 
 <script setup>
+import { userStore } from '@/store/userStore';
+import { computed } from 'vue';
+
+    const userStoreRef = userStore();
+
     const props = defineProps(['petDetails'])
+
+    const count = computed(()=> userStoreRef.getUserIsAdmin);
 </script>
