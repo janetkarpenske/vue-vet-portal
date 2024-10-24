@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RegisterForm from '../components/forms/RegisterForm.vue'
 import SigninForm from '../components/forms/SigninForm.vue'
-import Home from '../components/Home.vue'
-import About from '../components/About.vue'
-import Dashboard from '../components/Dashboard.vue'
+import Home from '../components/views/Home.vue'
+import About from '../components/views/About.vue'
+import Dashboard from '../components/views/Dashboard.vue'
 import { userStore } from '@/store/userStore';
 
 const isAuth = async (to,from,next) => {
