@@ -35,9 +35,10 @@
         width="auto"
     >
       <v-card
-        max-width="1200px"
+        width="60vw"
         prepend-icon="mdi-update"
-        text="Your application will relaunch automatically after the update is complete."
+        text=""
+        align="center"
         title="Register a Pet"
       >
       <v-card-text>
@@ -47,6 +48,7 @@
               sm="6"
             >
               <v-text-field
+                v-model="addPetFormData.petName"
                 label="Pet name*"
                 required
               ></v-text-field>
@@ -56,7 +58,8 @@
               sm="6"
             >
               <v-text-field
-                hint="example of helper text only on focus"
+                v-model="addPetFormData.additionalNames"
+                hint="Add any nicknames or alternate names"
                 label="Additional Names"
               ></v-text-field>
             </v-col>
@@ -64,23 +67,34 @@
         <v-row>
             <v-col
               cols="12"
-              sm="6"
+              sm="4"
             >
-              <v-select
-                :items="['0-17', '18-29', '30-54', '54+']"
+              <v-text-field
+                v-model="addPetFormData.age"
                 label="Age*"
                 required
-              ></v-select>
+              ></v-text-field>
             </v-col>
             <v-col
               cols="12"
-              sm="6"
+              sm="4"
+            >
+              <v-text-field
+                v-model="addPetFormData.sex"
+                label="Sex*"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col
+              cols="12"
+              sm="4"
             >
               <v-autocomplete
+                v-model="addPetFormData.species"
                 :items="['Canine','Feline','Equine','Misc']"
-                label="Species"
+                label="Species*"
                 auto-select-first
-                multiple
+                required
               ></v-autocomplete>
             </v-col>
           </v-row>
@@ -90,6 +104,7 @@
               sm="6"
             >
               <v-text-field
+                v-model="addPetFormData.breed"
                 label="Breed*"
                 required
               ></v-text-field>
@@ -100,6 +115,7 @@
               sm="6"
             >
               <v-text-field
+                v-model="addPetFormData.color"
                 label="Color*"
                 required
               ></v-text-field>
@@ -132,7 +148,7 @@
 import PetDetails from '@/components/PetDetails.vue';
 import { userStore } from '@/store/userStore';
 import { DB } from '@/firebase/config';
-import { collection, query, where, getDocs } from 'firebase/firestore'
+import { collection, query, where, getDocs, doc, setDoc } from 'firebase/firestore'
 
 //options API
 export default {
@@ -142,6 +158,16 @@ export default {
       items: [],
       userPets: [],
       isAddPetModalOpen: false,
+      user: null,
+      addPetFormData: {
+        petName:'',
+        additionalNames:'',
+        sex:'',
+        age:'',
+        species:'',
+        breed:'',
+        color:''
+      }
     }),
     methods: {
         async getUserPets(userID) {
@@ -161,16 +187,34 @@ export default {
         });
         },
 
-        handleAddPet(){
-            console.log(this.tab)
+        async handleAddPet(){
+            //Note: 3rd string param sets a custom id. Ommitting auto generates the id
+            await setDoc(doc(DB, "userPets"), {
+            upBreed: this.addPetFormData.breed,
+            upName: this.addPetFormData.petName,
+            upOwner: this.user.email,
+            upSex: "Male",
+            upSpecies: this.addPetFormData.species,
+            upUserID: this.user.uid
+            });
+            this.resetAddPetFormData();
             this.isAddPetModalOpen = false;
+        },
+
+        resetAddPetFormData(){
+            this.addPetFormData.breed = "";
+            this.addPetFormData.petName = "";
+            this.addPetFormData.species = "";
+            this.addPetFormData.additionalNames = "";
+            this.addPetFormData.color = "";
         }
     },
     created() {
         const userStoreRef = userStore();
         let user = userStoreRef.getUser;
         if(user != null) {
-            this.getUserPets(user.uid);
+            this.user = user;
+            this.getUserPets(this.user.uid);
         }
     }
   };
