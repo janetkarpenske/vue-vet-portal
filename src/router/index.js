@@ -4,6 +4,7 @@ import SigninForm from '../components/forms/SigninForm.vue'
 import Home from '../components/views/Home.vue'
 import About from '../components/views/About.vue'
 import Dashboard from '../components/views/Dashboard.vue'
+import PetDetails from '../components/views/FullPetDetails.vue'
 import { userStore } from '@/store/userStore';
 
 const isAuth = async (to,from,next) => {
@@ -24,7 +25,8 @@ const router = createRouter({
     { path: '/users/register', component: RegisterForm },
     { path: '/users/signin', component: SigninForm },
     { path: '/about', component: About },
-    { path: '/dashboard', component: Dashboard, beforeEnter: isAuth }
+    { path: '/dashboard', component: Dashboard, beforeEnter: isAuth },
+    { path: '/petdetails/:petid', component: PetDetails, beforeEnter: isAuth }
   ]
 })
 

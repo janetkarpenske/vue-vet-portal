@@ -10,7 +10,7 @@
             align-tabs="center"
         >
             <v-tab v-for="pet in userPets"
-            :key="pet.upName"
+            :key="pet.upDocumentID"
             :value="pet.key">{{ pet.upName }}</v-tab>
         </v-tabs>
 
@@ -19,7 +19,7 @@
                 <v-tabs-window-item 
                     v-for="pet in userPets"
                     :value="pet.key"
-                    :key="pet.upName"
+                    :key="pet.upDocumentID"
                     >
                     <pet-details 
                         :petDetails="pet"
@@ -148,7 +148,7 @@
 import PetDetails from '@/components/PetDetails.vue';
 import { userStore } from '@/store/userStore';
 import { DB } from '@/firebase/config';
-import { collection, query, where, getDocs, doc, setDoc } from 'firebase/firestore'
+import { collection, query, where, getDocs, doc, setDoc, addDoc } from 'firebase/firestore'
 
 //options API
 export default {
@@ -175,13 +175,13 @@ export default {
 
         const querySnapshot = await getDocs(q);
         querySnapshot?.forEach((doc) => {
-
         const pet = {
             upName: doc.data().upName,
             upSpecies: doc.data().upSpecies,
             upUserID: doc.data().upUserID,
             upOwner: doc.data().upOwner,
-            upSex: doc.data().upSex
+            upSex: doc.data().upSex,
+            upDocumentID: doc.id
         };
         this.userPets.push(pet);
         });
@@ -189,16 +189,19 @@ export default {
 
         async handleAddPet(){
             //Note: 3rd string param sets a custom id. Ommitting auto generates the id
-            await setDoc(doc(DB, "userPets"), {
+            await addDoc(collection(DB, "userPets"), {
             upBreed: this.addPetFormData.breed,
             upName: this.addPetFormData.petName,
             upOwner: this.user.email,
-            upSex: "Male",
+            upSex: this.addPetFormData.sex,
             upSpecies: this.addPetFormData.species,
             upUserID: this.user.uid
             });
             this.resetAddPetFormData();
             this.isAddPetModalOpen = false;
+            //clear and update our userPets
+            this.userPets = [];
+            await this.getUserPets(this.user.uid)
         },
 
         resetAddPetFormData(){
