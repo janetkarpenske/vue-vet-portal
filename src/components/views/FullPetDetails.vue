@@ -13,6 +13,11 @@
     >
         Delete Pet
     </v-btn>
+    <v-btn
+        @click="petData.isEditPetModalOpen = true"
+    >
+        Edit Pet Details
+    </v-btn>
 </template>
 
 <script setup>
@@ -26,7 +31,8 @@
     const router = useRouter();
     const petData = reactive({
     pet:'',
-    petid: ''
+    petid: '',
+    isEditPetModalOpen: false,
   });
 
     onMounted(()=>{
@@ -52,6 +58,15 @@ const handleDeletePet = async() => {
     try{
         await deleteDoc(doc(DB, "userPets", petData.petid));
         router.push('/dashboard');
+    }
+    catch(error) {
+        console.log(error);
+    }
+}
+const handleEditPet = async() => {
+    try{
+        //await deleteDoc(doc(DB, "userPets", petData.petid));
+        //router.push('/dashboard');
     }
     catch(error) {
         console.log(error);
