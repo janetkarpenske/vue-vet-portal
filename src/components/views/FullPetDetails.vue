@@ -18,6 +18,15 @@
     >
         Edit Pet Details
     </v-btn>
+    <edit-pet-details-form
+        v-if="petData.pet.upName"
+        :isEditPetModalOpen="petData.isEditPetModalOpen"
+        :petid="petData.petid"
+        :existingPet="petData.pet"
+        :user="petData.user"
+        @modal-closed="petData.isEditPetModalOpen = false"
+        @pet-updated="handlePetRefresh"
+    />
 </template>
 
 <script setup>
@@ -26,6 +35,8 @@
     import { doc, getDoc, deleteDoc } from "firebase/firestore";
     import { onBeforeMount, onMounted } from 'vue';
     import { DB } from '@/firebase/config';
+    import EditPetDetailsForm from '@/components/forms/EditPetDetailsForm.vue';
+    import { userStore } from '@/store/userStore';
 
     const route = useRoute();
     const router = useRouter();
@@ -33,10 +44,16 @@
     pet:'',
     petid: '',
     isEditPetModalOpen: false,
+    user: null
   });
 
     onMounted(()=>{
         getPetInfo();
+        const userStoreRef = userStore();
+        let tmpUser = userStoreRef.getUser;
+        if(tmpUser != null) {
+            petData.user = tmpUser;
+        }
     })
 
 const getPetInfo = async() => {
@@ -45,6 +62,7 @@ const getPetInfo = async() => {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             petData.pet = docSnap.data();
+            console.log(petData.pet);
             petData.petid = route.params.petid;
         } else {
             alert("No such pet exists");
@@ -63,10 +81,10 @@ const handleDeletePet = async() => {
         console.log(error);
     }
 }
-const handleEditPet = async() => {
+const handlePetRefresh = async() => {
     try{
-        //await deleteDoc(doc(DB, "userPets", petData.petid));
-        //router.push('/dashboard');
+        petData.isEditPetModalOpen = false;
+        getPetInfo();
     }
     catch(error) {
         console.log(error);

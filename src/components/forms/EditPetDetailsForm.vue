@@ -9,7 +9,7 @@
         prepend-icon="mdi-update"
         text=""
         align="center"
-        title="Register a Pet"
+        title="Editing Info"
       >
       <v-card-text>
         <v-row dense>
@@ -106,7 +106,7 @@
             color="rgb(54, 56, 80)"
             text="Save"
             variant="tonal"
-            @click="handleAddPet"
+            @click="handleEditPet"
           ></v-btn>
         </v-card-actions>
       </v-card>
@@ -120,14 +120,13 @@
     import { userStore } from '@/store/userStore';
     import { collection, query, where, getDocs, doc, setDoc, addDoc } from 'firebase/firestore'
 
-    const emit = defineEmits(['modal-closed','pet-added']);
-    const props = defineProps(['isAddPetModalOpen','user']);
-    const isModalOpen = computed(() => props.isAddPetModalOpen)
-    //const pet = ref(props.existingPet)
+    const emit = defineEmits(['modal-closed','pet-updated']);
+    const props = defineProps(['isEditPetModalOpen','petid','existingPet','user']);
+    const isModalOpen = computed(() => props.isEditPetModalOpen)
 
     const data = reactive({
-    pet:'',
     petid: '',
+    userid: '',
     addPetFormData: {
       petName:'',
       additionalNames:'',
@@ -139,52 +138,47 @@
     }
   });
 
-    // onMounted(()=>{
-    //   console.log("Is there a pet?", pet.value?.upName);
-    //   if(pet.value?.upName != null){
-    //     console.log("THERE IS A PET", pet.value.upName);
-    //     // data.addPetFormData.petName = pet.value.upName;
-    //     // data.additionalNames = pet.value.additionalNames;
-    //     // data.addPetFormData.sex = pet.value.upSex;
-    //     // data.addPetFormData.age = pet.value.upAge;
-    //     // data.addPetFormData.species = pet.value.upSpecies;
-    //     // data.addPetFormData.breed = pet.value.upBreed;
-    //     // data.addPetFormData.color = pet.value.upColor;
-    //   }
-    // })
-    //     onMounted(()=>{
-    //   console.log("Unmounting");
-    // })
+    onMounted(()=>{
+      if(props.existingPet?.upName != null){
+        data.addPetFormData.petName = props.existingPet.upName ?? "";
+        data.addPetFormData.additionalNames = props.existingPet.upAdditionalNames ?? "";
+        data.addPetFormData.sex = props.existingPet.upSex ?? "";
+        data.addPetFormData.age = props.existingPet.upAge ?? "";
+        data.addPetFormData.species = props.existingPet.upSpecies ?? "";
+        data.addPetFormData.breed = props.existingPet.upBreed ?? "";
+        data.addPetFormData.color = props.existingPet.upColor ?? "";
+        data.userid = props.existingPet.upUserID;
+        data.petid = props.petid;
+      }
+    })
 
 const emitCloseModal = () => {
     emit('modal-closed');
   }
-const handleAddPet = async() => {
-
-            console.log("Adding")
-            await addDoc(collection(DB, "userPets"), {
+const handleEditPet = async() => {
+            await setDoc(doc(DB, "userPets", data.petid), {
             upBreed: data.addPetFormData.breed,
             upName: data.addPetFormData.petName,
             upAdditionalNames: data.addPetFormData.additionalNames,
-            upOwner: props.user.email,
             upAge: data.addPetFormData.age,
             upColor: data.addPetFormData.color,
+            upOwner: props.user.email,
             upSex: data.addPetFormData.sex,
             upSpecies: data.addPetFormData.species,
             upUserID: props.user.uid
             });
-            resetAddPetFormData();
-            //emit that a pet was added - close modal and reload pets in parent component
-            emit('pet-added');
+            resetFormData();
+            //emit that a pet was edited - close modal and reload pet data in parent component
+            emit('pet-updated');
 
   }
-  const resetAddPetFormData = () => {
-    console.log("Reached", data.addPetFormData)
+  const resetFormData = () => {
             data.addPetFormData.breed = "";
             data.addPetFormData.petName = "";
             data.addPetFormData.species = "";
             data.addPetFormData.additionalNames = "";
             data.addPetFormData.color = "";
+            data.petid = "";
   }
 
 </script>

@@ -42,7 +42,7 @@ import PetDetails from '@/components/PetDetails.vue';
 import PetDetailsForm from '@/components/forms/PetDetailsForm.vue';
 import { userStore } from '@/store/userStore';
 import { DB } from '@/firebase/config';
-import { collection, query, where, getDocs, doc, setDoc, addDoc } from 'firebase/firestore'
+import { collection, query, where, getDocs } from 'firebase/firestore'
 
 //options API
 export default {
